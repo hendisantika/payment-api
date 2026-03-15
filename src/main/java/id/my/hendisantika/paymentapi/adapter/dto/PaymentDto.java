@@ -1,4 +1,4 @@
-package id.my.hendisantika.paymentapi.adafter.dto;
+package id.my.hendisantika.paymentapi.adapter.dto;
 
 import jakarta.validation.constraints.*;
 import lombok.Getter;
