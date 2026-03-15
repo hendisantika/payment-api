@@ -1,7 +1,12 @@
 package id.my.hendisantika.paymentapi.adapter.outbound.outbox;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import id.my.hendisantika.paymentapi.domain.model.PaymentEvent;
 import id.my.hendisantika.paymentapi.domain.port.PaymentEventPublisher;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 /**
  * Created by IntelliJ IDEA.
@@ -21,5 +26,25 @@ public class OutboxService implements PaymentEventPublisher {
 
     public OutboxService(OutboxRepository outboxRepository) {
         this.outboxRepository = outboxRepository;
+    }
+
+    @Override
+    @Transactional
+    public void savePaymentEvent(PaymentEvent event) {
+        // Convert PaymentEvent to OutboxEntity and save to DB with PENDING status
+        try {
+            OutboxEntity entity = new OutboxEntity();
+            entity.setAggregateId(event.getEventId());
+            entity.setAggregateType("Payment");
+            entity.setEventType("PaymentCreated");
+            entity.setPayload(objectMapper.writeValueAsString(event));
+            entity.setStatus(OutboxStatus.PENDING);
+            entity.setCreatedAt(LocalDateTime.now());
+
+            outboxRepository.save(entity);
+
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Failed to serialize PaymentEvent", e);
+        }
     }
 }
