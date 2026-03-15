@@ -1,7 +1,9 @@
 package id.my.hendisantika.paymentapi.domain.service;
 
+import id.my.hendisantika.paymentapi.domain.model.PaymentEvent;
 import id.my.hendisantika.paymentapi.domain.port.CreatePaymentEventUseCase;
 import id.my.hendisantika.paymentapi.domain.port.PaymentEventPublisher;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by IntelliJ IDEA.
@@ -22,5 +24,13 @@ public class PaymentService implements CreatePaymentEventUseCase {
     // When we use hexagonal architecture we want to decouple the domain logic from the infrastructure, so we use constructor injection to inject the dependencies, this way we can easily swap the implementation of the dependencies without affecting the domain logic.
     public PaymentService(PaymentEventPublisher paymentEventPublisher) {
         this.paymentEventPublisher = paymentEventPublisher;
+    }
+
+    @Override
+    @Transactional
+    public void createPaymentEvent(PaymentEvent paymentEvent) {
+
+        // save the payment in a outbox table in the same transaction, the OutboxProcessor will later read these entities and publish them to Kafka. This way we ensure that the payment event is published to Kafka only if the payment is successfully saved in the database, and we also ensure that we don't lose any events in case of a failure.
+        paymentEventPublisher.savePaymentEvent(paymentEvent);
     }
 }
