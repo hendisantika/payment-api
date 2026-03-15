@@ -1,5 +1,7 @@
 package id.my.hendisantika.paymentapi.config;
 
+import id.my.hendisantika.paymentapi.adapter.outbound.outbox.OutboxRepository;
+import id.my.hendisantika.paymentapi.adapter.outbound.outbox.OutboxService;
 import id.my.hendisantika.paymentapi.domain.port.CreatePaymentEventUseCase;
 import id.my.hendisantika.paymentapi.domain.port.PaymentEventPublisher;
 import id.my.hendisantika.paymentapi.domain.service.PaymentService;

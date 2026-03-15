@@ -1,11 +1,14 @@
 package id.my.hendisantika.paymentapi.adapter.inbound.http;
 
-import ch.qos.logback.classic.Logger;
 import id.my.hendisantika.paymentapi.adapter.dto.PaymentDto;
+import id.my.hendisantika.paymentapi.domain.model.PaymentEvent;
+import id.my.hendisantika.paymentapi.domain.port.CreatePaymentEventUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class PaymentResource {
 
     private final CreatePaymentEventUseCase createPaymentEventUseCase;
-    Logger logger = Logger.getLogger(PaymentResource.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(PaymentResource.class);
 
     public PaymentResource(CreatePaymentEventUseCase createPaymentEventUseCase) {
         this.createPaymentEventUseCase = createPaymentEventUseCase;
